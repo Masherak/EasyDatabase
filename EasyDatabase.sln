@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28606.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase", "EasyDatabase\EasyDatabase.csproj", "{515088EF-04E9-4FFB-9D3C-5E2940E9B732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.Tests", "EasyDatabase.Tests\EasyDatabase.Tests.csproj", "{36E514D3-84A6-4372-90CF-2FFD71FA2B4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{515088EF-04E9-4FFB-9D3C-5E2940E9B732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{515088EF-04E9-4FFB-9D3C-5E2940E9B732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{515088EF-04E9-4FFB-9D3C-5E2940E9B732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{515088EF-04E9-4FFB-9D3C-5E2940E9B732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36E514D3-84A6-4372-90CF-2FFD71FA2B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E514D3-84A6-4372-90CF-2FFD71FA2B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E514D3-84A6-4372-90CF-2FFD71FA2B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E514D3-84A6-4372-90CF-2FFD71FA2B4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {286E8326-2647-4B4C-974C-72546A1BA207}
+	EndGlobalSection
+EndGlobal
