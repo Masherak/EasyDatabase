@@ -22,7 +22,7 @@ The instance of Easy Database class can be a singleton, scoped or transient, it 
 ### Simple
 
 ```csharp
-var db = new EasyDatabase();
+var db = new Storage();
 await db.AddOrUpdate<Animal>(new Animal());
 
 var results = await db.Get<Animal>();
@@ -43,6 +43,6 @@ var jsonSerializerSettings = new JsonSerializerSettings
 	
 var configuration = new Configuration(documentsPath, encoding, jsonSerializerSettings);
 
-var db = new EasyDatabase(configuration);
+var db = new Storage(configuration);
 ...
 ```

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,7 +13,7 @@ namespace EasyDatabase.Tests
         public async Task TestMethod1()
         {
             // Arrange
-            var db = new EasyDatabase();
+            var db = new Storage();
             var testPropertyValues = new List<string> { "Hello", "World", "!" };
 
             // Act

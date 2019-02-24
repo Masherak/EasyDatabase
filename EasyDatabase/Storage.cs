@@ -8,11 +8,11 @@ using EasyDatabase.Services;
 
 namespace EasyDatabase
 {
-    public class EasyDatabase
+    public class Storage
     {
         private readonly DocumentService _documentService;
 
-        public EasyDatabase(Configuration configuration = null)
+        public Storage(Configuration configuration = null)
         {
             _documentService = new DocumentService(configuration ?? new Configuration());
         }

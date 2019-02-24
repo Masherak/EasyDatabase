@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>EasyDatabase</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>Jaroslav Klíma</Authors>
     <Company>Jaroslav Klíma</Company>
     <Product>EasyDatabase</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Database Json Local DocumentDatabase Document Basic FileSystem</PackageTags>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Very simple document database for different uses.</Description>
     <RepositoryType>GitHub</RepositoryType>
