@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EasyDatabase.Interfaces;
 using EasyDatabase.Services;
@@ -12,9 +11,9 @@ namespace EasyDatabase
     {
         private readonly DocumentService _documentService;
 
-        public Storage(Configuration configuration = null)
+        public Storage(DocumentService documentService)
         {
-            _documentService = new DocumentService(configuration ?? new Configuration());
+            _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
         }
 
         public async Task AddOrUpdate<T>(T entity) where T : IEntity

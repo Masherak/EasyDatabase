@@ -13,7 +13,7 @@ namespace EasyDatabase.Tests
         public async Task TestMethod1()
         {
             // Arrange
-            var db = new Storage();
+            var db = StorageFactory.GetStorage();
             var testPropertyValues = new List<string> { "Hello", "World", "!" };
 
             // Act
