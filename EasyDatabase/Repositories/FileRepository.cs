@@ -3,24 +3,41 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EasyDatabase.Interfaces;
+using System.Reflection;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using EasyDatabase.Managers;
 
-namespace EasyDatabase.Services
+namespace EasyDatabase.Repositories
 {
-    public class DocumentRepository
+    public class FileRepository : IRepository
     {
-        private readonly Configuration _configuration;
+        private const string DefaultFolderName = "EasyDatabase";
+        private const string FileNameSuffix = ".json";
 
-        public DocumentRepository(Configuration configuration)
+        private readonly string _path;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
+
+        public FileRepository()
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            var assemblyLocation = Assembly.GetExecutingAssembly()?.Location ?? throw new InvalidOperationException("Assembly location is not available");
+            _path = Path.Combine(Path.GetDirectoryName(assemblyLocation), DefaultFolderName);
+
+            _jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            };
         }
 
-        public async Task<T> ReadEntity<T>(string fileName) where T : IEntity
+        public async Task<T> ReadEntity<T>(Guid id) where T : IEntity
         {
             await ConcurrentManager.DocumentLock.WaitAsync();
             try
             {
-                var path = GetPath(typeof(T), fileName);
+                var path = GetPath(typeof(T), GetFileName(id));
 
                 if (!File.Exists(path))
                 {
@@ -29,13 +46,13 @@ namespace EasyDatabase.Services
 
                 using (var reader = File.OpenText(path))
                 {
-                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync(), _configuration.JsonSerializerSettings);
+                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync(), _jsonSerializerSettings);
                 }
             }
             catch (Exception e)
             {
                 e.Data.Add("Type", typeof(T));
-                e.Data.Add("FileName", fileName);
+                e.Data.Add("FileName", GetFileName(id));
 
                 throw;
             }
@@ -43,6 +60,30 @@ namespace EasyDatabase.Services
             {
                 ConcurrentManager.DocumentLock.Release();
             }
+        }
+
+        public async Task<T> ReadEntity<T>(string id) where T : IEntity
+        {
+            var guids = Regex.Matches(id, @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}")
+                .Cast<Match>()
+                .Where(_ => _.Success)
+                .Select(_ => _.Value)
+                .ToList();
+
+            if (guids.Count != 1)
+            {
+                return default;
+            }
+
+            return await ReadEntity<T>(Guid.Parse(guids.Single()));
+        }
+
+        public async Task<IEnumerable<T>> ReadEntities<T>() where T : IEntity
+        {
+            var dirInfo = new DirectoryInfo(GetPath(typeof(T)));
+            var fileInfos = dirInfo.GetFiles($"*{FileNameSuffix}", SearchOption.TopDirectoryOnly);
+
+            return await Task.WhenAll(fileInfos.Select(async _ => await ReadEntity<T>(_.Name)));
         }
 
         public async Task WriteEntity<T>(T entity) where T : IEntity
@@ -57,15 +98,15 @@ namespace EasyDatabase.Services
             {
                 Directory.CreateDirectory(GetPath(typeof(T)));
                 using (var stream = new FileStream(GetPath(typeof(T), entity.Id), FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-                using (var sw = new StreamWriter(stream, _configuration.Encoding))
+                using (var sw = new StreamWriter(stream, Encoding.UTF8))
                 {
-                    await sw.WriteLineAsync(JsonConvert.SerializeObject(entity, _configuration.JsonSerializerSettings));
+                    await sw.WriteLineAsync(JsonConvert.SerializeObject(entity, _jsonSerializerSettings));
                 }
             }
             catch (Exception e)
             {
                 e.Data.Add("Type", typeof(T));
-                e.Data.Add("Entity", JsonConvert.SerializeObject(entity, _configuration.JsonSerializerSettings));
+                e.Data.Add("Entity", JsonConvert.SerializeObject(entity, _jsonSerializerSettings));
             }
             finally
             {
@@ -105,14 +146,14 @@ namespace EasyDatabase.Services
             }
         }
 
-        public static string GetFileName(Guid id)
+        private static string GetFileName(Guid id)
         {
-            return string.Concat(id, Configuration.FileNameSuffix);
+            return string.Concat(id, FileNameSuffix);
         }
 
-        public string GetPath(Type type)
+        private string GetPath(Type type)
         {
-            return Path.Combine(_configuration.DocumentsPath, type?.Namespace ?? throw new ArgumentNullException($"The namespace of type {nameof(type)} cannot be a null"), type.Name);
+            return Path.Combine(_path, type?.Namespace ?? throw new ArgumentNullException($"The namespace of type {nameof(type)} cannot be a null"), type.Name);
         }
 
         private string GetPath(Type type, string fileName)

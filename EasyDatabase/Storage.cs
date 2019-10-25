@@ -9,9 +9,9 @@ namespace EasyDatabase
 {
     public class Storage
     {
-        private readonly DocumentService _documentService;
+        private readonly Service _documentService;
 
-        public Storage(DocumentService documentService)
+        public Storage(Service documentService)
         {
             _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
         }

@@ -18,7 +18,7 @@ namespace EasyDatabase.Tests
 
             // Act
             var testEntities = testPropertyValues.Select(_ => new Entities.Test(_)).ToList();
-            await db.AddOrUpdate<Entities.Test>(testEntities);
+            await db.AddOrUpdate(testEntities);
             var result = (await db.Get<Entities.Test>()).ToList();
             await db.Delete<Entities.Test>(result);
             var nextResult = (await db.Get<Entities.Test>()).ToList();

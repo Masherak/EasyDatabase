@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace EasyDatabase.Services
+namespace EasyDatabase.Managers
 {
     public static class ConcurrentManager
     {
