@@ -3,16 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>EasyDatabase</PackageId>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <Authors>Jaroslav Klíma</Authors>
     <Company>Jaroslav Klíma</Company>
     <Product>EasyDatabase</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Database Json Local DocumentDatabase Document Basic FileSystem EasyDatabase Store DataStore</PackageTags>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
-    <Description>Very simple document database for different uses.</Description>
+    <Description>Straightforward database for .NET applications which helps you store data with minimal overhead.</Description>
     <RepositoryType>GitHub</RepositoryType>
     <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Masherak/EasyDatabase</PackageProjectUrl>

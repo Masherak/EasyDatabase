@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyDatabase.Configurations;
+using EasyDatabase.Enums;
 using EasyDatabase.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -11,21 +13,19 @@ namespace EasyDatabase.Services
     {
         private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private readonly IRepository _repository;
-        private readonly Configuration _configuration;
-        private readonly bool _cacheIsEnabled;
+        private readonly CacheConfiguration _cacheConfiguration;
 
-        public Service(IRepository repository, Configuration configuration)
+        public Service(IRepository repository, CacheConfiguration cacheConfiguration)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _cacheIsEnabled = configuration.CacheSlidingExpirationTimeInHours.HasValue;
+            _cacheConfiguration = cacheConfiguration ?? throw new ArgumentNullException(nameof(cacheConfiguration));
         }
 
         public async Task AddOrUpdateEntities<T>(IEnumerable<T> entities) where T : IEntity
         {
             await Task.WhenAll(entities.Select(async _ => await _repository.WriteEntity(_)));
 
-            if (_cacheIsEnabled)
+            if (_cacheConfiguration.IsEnabled)
             {
                 foreach (var entity in entities)
                 {
@@ -39,11 +39,11 @@ namespace EasyDatabase.Services
             await AddOrUpdateEntities(new[] { entity });
         }
 
-        public async Task DeleteEntities<T>(IEnumerable<Guid> ids)
+        public async Task DeleteEntities<T>(IEnumerable<Guid> ids) where T : IEntity
         {
             await Task.WhenAll(ids.Select(async _ => await _repository.DeleteEntity<T>(_)));
 
-            if (_cacheIsEnabled)
+            if (_cacheConfiguration.IsEnabled)
             {
                 foreach(var id in ids)
                 {
@@ -52,7 +52,7 @@ namespace EasyDatabase.Services
             }
         }
 
-        public async Task DeleteEntity<T>(Guid id)
+        public async Task DeleteEntity<T>(Guid id) where T : IEntity
         {
             await DeleteEntities<T>(new[] { id });
         }
@@ -64,14 +64,25 @@ namespace EasyDatabase.Services
 
         public async Task<T> ReadEntity<T>(Guid id) where T : IEntity
         {
-            if(!_cacheIsEnabled)
+            if(!_cacheConfiguration.IsEnabled)
             {
                 return await _repository.ReadEntity<T>(id);
             }
 
             return await _cache.GetOrCreateAsync(id, async _ =>
             {
-                _.SetSlidingExpiration(TimeSpan.FromHours(_configuration.CacheSlidingExpirationTimeInHours.Value));
+                if (_cacheConfiguration.Type == CacheType.Absolute)
+                {
+                    _.SetAbsoluteExpiration(_cacheConfiguration.Offset.Value);
+                }
+                else if(_cacheConfiguration.Type == CacheType.Sliding)
+                {
+                    _.SetSlidingExpiration(_cacheConfiguration.Offset.Value);
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(_cacheConfiguration.Type.ToString());
+                }
 
                 return await _repository.ReadEntity<T>(id);
             });

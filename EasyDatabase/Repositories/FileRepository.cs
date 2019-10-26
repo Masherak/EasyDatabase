@@ -8,7 +8,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EasyDatabase.Managers;
+using System.Threading;
 
 namespace EasyDatabase.Repositories
 {
@@ -16,6 +16,9 @@ namespace EasyDatabase.Repositories
     {
         private const string DefaultFolderName = "EasyDatabase";
         private const string FileNameSuffix = ".json";
+        private const string GuidRegex = @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
+
+        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1);
 
         private readonly string _path;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
@@ -34,7 +37,7 @@ namespace EasyDatabase.Repositories
 
         public async Task<T> ReadEntity<T>(Guid id) where T : IEntity
         {
-            await ConcurrentManager.DocumentLock.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 var path = GetPath(typeof(T), GetFileName(id));
@@ -58,24 +61,8 @@ namespace EasyDatabase.Repositories
             }
             finally
             {
-                ConcurrentManager.DocumentLock.Release();
+                Semaphore.Release();
             }
-        }
-
-        public async Task<T> ReadEntity<T>(string id) where T : IEntity
-        {
-            var guids = Regex.Matches(id, @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}")
-                .Cast<Match>()
-                .Where(_ => _.Success)
-                .Select(_ => _.Value)
-                .ToList();
-
-            if (guids.Count != 1)
-            {
-                return default;
-            }
-
-            return await ReadEntity<T>(Guid.Parse(guids.Single()));
         }
 
         public async Task<IEnumerable<T>> ReadEntities<T>() where T : IEntity
@@ -83,7 +70,14 @@ namespace EasyDatabase.Repositories
             var dirInfo = new DirectoryInfo(GetPath(typeof(T)));
             var fileInfos = dirInfo.GetFiles($"*{FileNameSuffix}", SearchOption.TopDirectoryOnly);
 
-            return await Task.WhenAll(fileInfos.Select(async _ => await ReadEntity<T>(_.Name)));
+            var ids = fileInfos.SelectMany(_ => Regex.Matches(_.Name, GuidRegex).Cast<Match>()).ToList();
+
+            if (ids.Any() && ids.Any(_ => !_.Success))
+            {
+                throw new InvalidOperationException($"Data for type {nameof(T)} are corrupted");
+            }
+
+            return await Task.WhenAll(ids.Select(async _ => await ReadEntity<T>(Guid.Parse(_.Value))));
         }
 
         public async Task WriteEntity<T>(T entity) where T : IEntity
@@ -93,7 +87,7 @@ namespace EasyDatabase.Repositories
                 throw new ArgumentException($"The id cannot be an empty GUID");
             }
 
-            await ConcurrentManager.DocumentLock.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 Directory.CreateDirectory(GetPath(typeof(T)));
@@ -110,13 +104,13 @@ namespace EasyDatabase.Repositories
             }
             finally
             {
-                ConcurrentManager.DocumentLock.Release();
+                Semaphore.Release();
             }
         }
 
-        public async Task DeleteEntity<T>(Guid id)
+        public async Task DeleteEntity<T>(Guid id) where T : IEntity
         {
-            await ConcurrentManager.DocumentLock.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 var path = GetPath(typeof(T), id);
@@ -142,7 +136,7 @@ namespace EasyDatabase.Repositories
             }
             finally
             {
-                ConcurrentManager.DocumentLock.Release();
+                Semaphore.Release();
             }
         }
 

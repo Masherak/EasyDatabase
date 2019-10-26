@@ -1,4 +1,5 @@
-﻿using EasyDatabase.Interfaces;
+﻿using EasyDatabase.Configurations;
+using EasyDatabase.Interfaces;
 using EasyDatabase.Repositories;
 using EasyDatabase.Services;
 
@@ -6,11 +7,11 @@ namespace EasyDatabase
 {
     public static class StorageFactory
     {
-        public static Storage GetStorage(Configuration configuration = null, IRepository repository = null)
+        public static Storage GetStorage(CacheConfiguration cacheConfiguration = null, IRepository repository = null)
         {
-            if(configuration == null)
+            if(cacheConfiguration == null)
             {
-                configuration = new Configuration();
+                cacheConfiguration = new CacheConfiguration();
             }
 
             if(repository == null)
@@ -18,7 +19,7 @@ namespace EasyDatabase
                 repository = new FileRepository();
             }
 
-            return new Storage(new Service(repository, configuration));
+            return new Storage(new Service(repository, cacheConfiguration));
         }
     }
 }

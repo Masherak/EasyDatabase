@@ -1,8 +1,9 @@
 
+
 # EasyDatabase
 
 ## Description
-Straightforward database which helps you store data with minimal overhead.
+Straightforward database for .NET applications which helps you store data with minimal overhead.
 
 ## Usage
 All POCO entities must implement interface '**IEntity**'
@@ -73,16 +74,24 @@ public class Test
 }
 ```
 
-### Configuration
-While initialization you can override default **configuration** and **repository**.
+### Configurations
+While initialization you can override default configurations, in this time we are talking about **cacheConfiguration** and **repository**.
 
 Lazy caching can be enabled if necessary.
 ```csharp
-public class Configuration
+public class CacheConfiguration
 {
-    public Configuration(double? cacheSlidingExpirationTimeInHours = null);
+    public CacheConfiguration(CacheType? type = null, TimeSpan? offset = null)
+    {
+        Type = type;
+        Offset = offset;
+    }
 
-    public double? CacheSlidingExpirationTimeInHours { get; }
+    public bool IsEnabled => Type.HasValue && Offset.HasValue;
+
+    public CacheType? Type { get; }
+
+    public TimeSpan? Offset { get; }
 }
 ```
 
@@ -91,9 +100,8 @@ Is also possible to implement your own repository over interface **IRepository**
 public interface IRepository
 {
     Task<T> ReadEntity<T>(Guid id) where T : IEntity;
-    Task<T> ReadEntity<T>(string id) where T : IEntity;
     Task<IEnumerable<T>> ReadEntities<T>() where T : IEntity;
     Task WriteEntity<T>(T entity) where T : IEntity;
-    Task DeleteEntity<T>(Guid id);
+    Task DeleteEntity<T>(Guid id) where T : IEntity;
 }
 ```

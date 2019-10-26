@@ -13,15 +13,18 @@ namespace EasyDatabase.Tests
         public async Task TestMethod1()
         {
             // Arrange
-            var db = StorageFactory.GetStorage();
+            var storage = StorageFactory.GetStorage();
             var testPropertyValues = new List<string> { "Hello", "World", "!" };
 
             // Act
+            //clean
+            await storage.Delete<Entities.Test>(await storage.Get<Entities.Test>());
+
             var testEntities = testPropertyValues.Select(_ => new Entities.Test(_)).ToList();
-            await db.AddOrUpdate(testEntities);
-            var result = (await db.Get<Entities.Test>()).ToList();
-            await db.Delete<Entities.Test>(result);
-            var nextResult = (await db.Get<Entities.Test>()).ToList();
+            await storage.AddOrUpdate(testEntities);
+            var result = (await storage.Get<Entities.Test>()).ToList();
+            await storage.Delete<Entities.Test>(result);
+            var nextResult = (await storage.Get<Entities.Test>()).ToList();
 
             // Assert
             Assert.IsFalse(result.Any(_ => _.Id == Guid.Empty));
