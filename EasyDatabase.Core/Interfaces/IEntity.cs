@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyDatabase.Interfaces
+namespace EasyDatabase.Core.Interfaces
 {
     public interface IEntity
     {

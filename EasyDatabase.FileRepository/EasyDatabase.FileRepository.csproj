@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jaroslav Klíma</Authors>
+    <Description>Straightforward database for .NET applications which helps you store data with minimal overhead.</Description>
+    <Copyright>Copyright ©2019 Jaroslav Klíma</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Masherak/EasyDatabase</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Database Json Local DocumentDatabase Document Basic FileSystem EasyDatabase Store DataStore</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EasyDatabase.Core\EasyDatabase.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EasyDatabase.Interfaces
+namespace EasyDatabase.Core.Interfaces
 {
     public interface IRepository
     {

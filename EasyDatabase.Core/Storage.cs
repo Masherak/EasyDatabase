@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EasyDatabase.Interfaces;
-using EasyDatabase.Services;
+using EasyDatabase.Core.Interfaces;
+using EasyDatabase.Core.Services;
 
-namespace EasyDatabase
+namespace EasyDatabase.Core
 {
     public class Storage
     {

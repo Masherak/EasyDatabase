@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using EasyDatabase.Interfaces;
+using EasyDatabase.Core.Interfaces;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace EasyDatabase.Repositories
+namespace EasyDatabase.FileRepository
 {
-    public class FileRepository : IRepository
+    public class Repository : IRepository
     {
         private const string DefaultFolderName = "EasyDatabase";
         private const string FileNameSuffix = ".json";
@@ -23,7 +23,7 @@ namespace EasyDatabase.Repositories
         private readonly string _path;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
 
-        public FileRepository()
+        public Repository()
         {
             var assemblyLocation = Assembly.GetExecutingAssembly()?.Location ?? throw new InvalidOperationException("Assembly location is not available");
             _path = Path.Combine(Path.GetDirectoryName(assemblyLocation), DefaultFolderName);

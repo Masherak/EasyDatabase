@@ -1,7 +1,7 @@
 ﻿using System;
-using EasyDatabase.Interfaces;
+using EasyDatabase.Core.Interfaces;
 
-namespace EasyDatabase.Tests.Entities
+namespace EasyDatabase.Repository.Tests.Entities
 {
     public class Test : IEntity
     {

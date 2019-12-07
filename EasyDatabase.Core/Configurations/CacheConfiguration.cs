@@ -1,7 +1,7 @@
-﻿using EasyDatabase.Enums;
+﻿using EasyDatabase.Core.Enums;
 using System;
 
-namespace EasyDatabase.Configurations
+namespace EasyDatabase.Core.Configurations
 {
     public class CacheConfiguration
     {

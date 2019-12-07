@@ -1,4 +1,4 @@
-﻿namespace EasyDatabase.Enums
+﻿namespace EasyDatabase.Core.Enums
 {
     public enum CacheType
     {

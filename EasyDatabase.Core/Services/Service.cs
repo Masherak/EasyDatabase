@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EasyDatabase.Configurations;
-using EasyDatabase.Enums;
-using EasyDatabase.Interfaces;
+using EasyDatabase.Core.Configurations;
+using EasyDatabase.Core.Enums;
+using EasyDatabase.Core.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace EasyDatabase.Services
+namespace EasyDatabase.Core.Services
 {
     public class Service
     {
