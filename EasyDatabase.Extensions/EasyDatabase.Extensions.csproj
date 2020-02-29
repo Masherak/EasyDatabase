@@ -7,7 +7,7 @@
     <Company>Jaroslav Klíma</Company>
     <Description>Straightforward database for .NET applications which helps you store data with minimal overhead.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright ©2019 Jaroslav Klíma</Copyright>
+    <Copyright>Copyright ©2020 Jaroslav Klíma</Copyright>
     <PackageProjectUrl>https://github.com/Masherak/EasyDatabase</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>

@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Jaroslav Klíma</Authors>
+    <Description>Straightforward Azure Blob Storage database for .NET applications which helps you store data with minimal overhead.</Description>
+    <Copyright>Copyright ©2020 Jaroslav Klíma</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Masherak/EasyDatabase</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Database Json Local DocumentDatabase Document Basic AzureBlobStorage AzureStorage Storage EasyDatabase Store DataStore</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
