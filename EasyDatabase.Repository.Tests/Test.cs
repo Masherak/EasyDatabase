@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 using EasyDatabase.Core;
 using EasyDatabase.Core.Interfaces;
 using EasyDatabase.Repository.Tests.Helpers;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.Azure.KeyVault.KeyVaultClient;
 
 namespace EasyDatabase.Repository.Tests
 {
