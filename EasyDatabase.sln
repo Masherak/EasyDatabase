@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.Core", "EasyDatabase.Core\EasyDatabase.Core.csproj", "{860605BE-4A6E-4416-B360-A06DE7F4DD92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase.Core", "EasyDatabase.Core\EasyDatabase.Core.csproj", "{860605BE-4A6E-4416-B360-A06DE7F4DD92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.Extensions", "EasyDatabase.Extensions\EasyDatabase.Extensions.csproj", "{52D2623E-6F91-4FDD-BA97-85DD261EB2AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase.Extensions", "EasyDatabase.Extensions\EasyDatabase.Extensions.csproj", "{52D2623E-6F91-4FDD-BA97-85DD261EB2AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.FileRepository", "EasyDatabase.FileRepository\EasyDatabase.FileRepository.csproj", "{759C9FA1-DF9D-4893-9D90-B61E3AEB2B37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase.FileRepository", "EasyDatabase.FileRepository\EasyDatabase.FileRepository.csproj", "{759C9FA1-DF9D-4893-9D90-B61E3AEB2B37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.Core.Tests", "EasyDatabase.Core.Tests\EasyDatabase.Core.Tests.csproj", "{1E83185E-CB54-4B0D-83CB-5C28504CFB3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase.Core.Tests", "EasyDatabase.Core.Tests\EasyDatabase.Core.Tests.csproj", "{1E83185E-CB54-4B0D-83CB-5C28504CFB3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.Repository.Tests", "EasyDatabase.Repository.Tests\EasyDatabase.Repository.Tests.csproj", "{DC83FE16-3441-43B6-B64D-185D85C601AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyDatabase.Repository.Tests", "EasyDatabase.Repository.Tests\EasyDatabase.Repository.Tests.csproj", "{DC83FE16-3441-43B6-B64D-185D85C601AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyDatabase.AzureBlobRepository", "EasyDatabase.AzureBlobRepository\EasyDatabase.AzureBlobRepository.csproj", "{20C016F9-B64D-4BED-9CF9-ECC3174D5228}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DC83FE16-3441-43B6-B64D-185D85C601AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC83FE16-3441-43B6-B64D-185D85C601AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC83FE16-3441-43B6-B64D-185D85C601AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C016F9-B64D-4BED-9CF9-ECC3174D5228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C016F9-B64D-4BED-9CF9-ECC3174D5228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C016F9-B64D-4BED-9CF9-ECC3174D5228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C016F9-B64D-4BED-9CF9-ECC3174D5228}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
