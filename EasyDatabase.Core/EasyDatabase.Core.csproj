@@ -8,7 +8,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Masherak/EasyDatabase</PackageProjectUrl>
-    <Copyright>Copyright ©2019 Jaroslav Klíma</Copyright>
+    <Copyright>Copyright ©2020 Jaroslav Klíma</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Jaroslav Klíma</Authors>
   </PropertyGroup>

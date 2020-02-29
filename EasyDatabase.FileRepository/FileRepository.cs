@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace EasyDatabase.FileRepository
 {
-    public class Repository : IRepository
+    public class FileRepository : IRepository
     {
         private const string DefaultFolderName = "EasyDatabase";
         private const string FileNameSuffix = ".json";
@@ -23,7 +23,7 @@ namespace EasyDatabase.FileRepository
         private readonly string _path;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
 
-        public Repository()
+        public FileRepository()
         {
             var assemblyLocation = Assembly.GetExecutingAssembly()?.Location ?? throw new InvalidOperationException("Assembly location is not available");
             _path = Path.Combine(Path.GetDirectoryName(assemblyLocation), DefaultFolderName);
@@ -47,10 +47,8 @@ namespace EasyDatabase.FileRepository
                     throw new ArgumentException($"The file does not exist on the path {path}");
                 }
 
-                using (var reader = File.OpenText(path))
-                {
-                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync(), _jsonSerializerSettings);
-                }
+                using var reader = File.OpenText(path);
+                return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync(), _jsonSerializerSettings);
             }
             catch (Exception e)
             {
@@ -91,11 +89,9 @@ namespace EasyDatabase.FileRepository
             try
             {
                 Directory.CreateDirectory(GetPath(typeof(T)));
-                using (var stream = new FileStream(GetPath(typeof(T), entity.Id), FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-                using (var sw = new StreamWriter(stream, Encoding.UTF8))
-                {
-                    await sw.WriteLineAsync(JsonConvert.SerializeObject(entity, _jsonSerializerSettings));
-                }
+                using var stream = new FileStream(GetPath(typeof(T), entity.Id), FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
+                using var sw = new StreamWriter(stream, Encoding.UTF8);
+                await sw.WriteLineAsync(JsonConvert.SerializeObject(entity, _jsonSerializerSettings));
             }
             catch (Exception e)
             {
