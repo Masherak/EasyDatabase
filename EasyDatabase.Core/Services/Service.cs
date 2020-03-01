@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EasyDatabase.Core.Configurations;
-using EasyDatabase.Core.Enums;
 using EasyDatabase.Core.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -13,25 +11,15 @@ namespace EasyDatabase.Core.Services
     {
         private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private readonly IRepository _repository;
-        private readonly CacheConfiguration _cacheConfiguration;
 
-        public Service(IRepository repository, CacheConfiguration cacheConfiguration)
+        public Service(IRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _cacheConfiguration = cacheConfiguration ?? throw new ArgumentNullException(nameof(cacheConfiguration));
         }
 
         public async Task AddOrUpdateEntities<T>(IEnumerable<T> entities) where T : IEntity
         {
             await Task.WhenAll(entities.Select(async _ => await _repository.WriteEntity(_)));
-
-            if (_cacheConfiguration.IsEnabled)
-            {
-                foreach (var entity in entities)
-                {
-                    InvalidateCache(entity.Id);
-                }
-            }
         }
 
         public async Task AddOrUpdateEntities<T>(T entity) where T : IEntity
@@ -42,14 +30,6 @@ namespace EasyDatabase.Core.Services
         public async Task DeleteEntities<T>(IEnumerable<Guid> ids) where T : IEntity
         {
             await Task.WhenAll(ids.Select(async _ => await _repository.DeleteEntity<T>(_)));
-
-            if (_cacheConfiguration.IsEnabled)
-            {
-                foreach(var id in ids)
-                {
-                    InvalidateCache(id);
-                }
-            }
         }
 
         public async Task DeleteEntity<T>(Guid id) where T : IEntity
@@ -64,33 +44,7 @@ namespace EasyDatabase.Core.Services
 
         public async Task<T> ReadEntity<T>(Guid id) where T : IEntity
         {
-            if(!_cacheConfiguration.IsEnabled)
-            {
-                return await _repository.ReadEntity<T>(id);
-            }
-
-            return await _cache.GetOrCreateAsync(id, async _ =>
-            {
-                if (_cacheConfiguration.Type == CacheType.Absolute)
-                {
-                    _.SetAbsoluteExpiration(_cacheConfiguration.Offset.Value);
-                }
-                else if(_cacheConfiguration.Type == CacheType.Sliding)
-                {
-                    _.SetSlidingExpiration(_cacheConfiguration.Offset.Value);
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(_cacheConfiguration.Type.ToString());
-                }
-
-                return await _repository.ReadEntity<T>(id);
-            });
-        }
-
-        private void InvalidateCache(Guid id)
-        {
-            _cache.Remove(id);
+            return await _repository.ReadEntity<T>(id);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace EasyDatabase.FileRepository
 {
     public class FileRepository : IRepository
     {
-        private const string DefaultFolderName = "EasyDatabase";
-        private const string FileNameSuffix = ".json";
-        private const string GuidRegex = @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
+        private const string _defaultFolderName = "EasyDatabase";
+        private const string _fileNameSuffix = ".json";
+        private const string _guidRegex = @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
 
-        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly string _path;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
@@ -26,7 +26,9 @@ namespace EasyDatabase.FileRepository
         public FileRepository()
         {
             var assemblyLocation = Assembly.GetExecutingAssembly()?.Location ?? throw new InvalidOperationException("Assembly location is not available");
-            _path = Path.Combine(Path.GetDirectoryName(assemblyLocation), DefaultFolderName);
+            _path = Path.Combine(Path.GetDirectoryName(assemblyLocation), _defaultFolderName);
+
+            Directory.CreateDirectory(_path);
 
             _jsonSerializerSettings = new JsonSerializerSettings
             {
@@ -37,7 +39,7 @@ namespace EasyDatabase.FileRepository
 
         public async Task<T> ReadEntity<T>(Guid id) where T : IEntity
         {
-            await Semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             try
             {
                 var path = GetPath(typeof(T), GetFileName(id));
@@ -59,16 +61,20 @@ namespace EasyDatabase.FileRepository
             }
             finally
             {
-                Semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task<IEnumerable<T>> ReadEntities<T>() where T : IEntity
         {
-            var dirInfo = new DirectoryInfo(GetPath(typeof(T)));
-            var fileInfos = dirInfo.GetFiles($"*{FileNameSuffix}", SearchOption.TopDirectoryOnly);
+            var path = GetPath(typeof(T));
 
-            var ids = fileInfos.SelectMany(_ => Regex.Matches(_.Name, GuidRegex).Cast<Match>()).ToList();
+            Directory.CreateDirectory(path);
+
+            var dirInfo = new DirectoryInfo(path);
+            var fileInfos = dirInfo.GetFiles($"*{_fileNameSuffix}", SearchOption.TopDirectoryOnly);
+
+            var ids = fileInfos.SelectMany(_ => Regex.Matches(_.Name, _guidRegex).Cast<Match>()).ToList();
 
             if (ids.Any() && ids.Any(_ => !_.Success))
             {
@@ -85,7 +91,7 @@ namespace EasyDatabase.FileRepository
                 throw new ArgumentException($"The id cannot be an empty GUID");
             }
 
-            await Semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             try
             {
                 Directory.CreateDirectory(GetPath(typeof(T)));
@@ -100,13 +106,13 @@ namespace EasyDatabase.FileRepository
             }
             finally
             {
-                Semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         public async Task DeleteEntity<T>(Guid id) where T : IEntity
         {
-            await Semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             try
             {
                 var path = GetPath(typeof(T), id);
@@ -132,13 +138,13 @@ namespace EasyDatabase.FileRepository
             }
             finally
             {
-                Semaphore.Release();
+                _semaphore.Release();
             }
         }
 
         private static string GetFileName(Guid id)
         {
-            return string.Concat(id, FileNameSuffix);
+            return string.Concat(id, _fileNameSuffix);
         }
 
         private string GetPath(Type type)
