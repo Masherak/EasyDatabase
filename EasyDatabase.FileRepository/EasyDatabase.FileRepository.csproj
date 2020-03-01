@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/Masherak/EasyDatabase</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Database Json Local DocumentDatabase Document Basic FileSystem EasyDatabase Store DataStore</PackageTags>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

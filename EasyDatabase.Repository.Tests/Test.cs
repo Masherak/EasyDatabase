@@ -27,7 +27,7 @@ namespace EasyDatabase.Repository.Tests
 
             foreach (var repository in repositories)
             {
-                var storage = StorageFactory.GetStorage(repository, new Core.Configurations.CacheConfiguration());
+                var storage = StorageFactory.GetStorage(repository);
 
                 // Act
                 try

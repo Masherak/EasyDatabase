@@ -11,6 +11,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Database Json Local DocumentDatabase Document Basic AzureBlobStorage AzureStorage Storage EasyDatabase Store DataStore</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
